@@ -1,0 +1,31 @@
+{
+  "name": "mcjs",
+  "version": "1.0.0",
+  "description": "Javascript interaction library",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "init": "mkdir dist lib",
+    "clean": "rm -rf dist lib",
+    "prebuild": "npm run clean && npm run init",
+    "build": "rollup -c && babel dist -d lib",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrArtemi/MCjs.git"
+  },
+  "author": "Adrien Milcent",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DrArtemi/MCjs/issues"
+  },
+  "homepage": "https://github.com/DrArtemi/MCjs#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "http-server": "^0.11.1",
+    "rollup": "^0.59.2"
+  }
+}

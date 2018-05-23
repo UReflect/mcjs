@@ -1,0 +1,1 @@
+var mcsolar = new MC();
