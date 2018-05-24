@@ -1,1 +1,1 @@
-var mcsolar = new MC();
+var mcsolar = new MC("widgetContainer", ".widget", [19, 10], false, true);

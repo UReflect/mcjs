@@ -1,0 +1,15 @@
+#widgetContainer {
+    background-color: blue;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.widget {
+    background-color: red;
+    user-select: none;
+    float: left;
+}
