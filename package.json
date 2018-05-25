@@ -1,15 +1,15 @@
 {
-  "name": "mcjs",
+  "name": "@drartemi/mcjs",
   "version": "1.0.0",
   "description": "Javascript interaction library",
-  "main": "index.js",
+  "main": "lib/mc.js",
   "scripts": {
-    "test": "test",
     "init": "mkdir dist lib",
     "clean": "rm -rf dist lib",
-    "prebuild": "npm run clean && npm run init",
+    "prebuild": "yarn run clean && yarn run init",
     "build": "rollup -c && babel dist -d lib && uglifyjs lib/mc.js -o lib/mc.min.js",
-    "start": "http-server"
+    "start": "http-server",
+    "prepublish": "yarn run clean && yarn run build"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,5 @@
     "http-server": "^0.11.1",
     "rollup": "^0.59.2",
     "uglify-js": "^3.3.27"
-  },
-  "dependencies": {}
+  }
 }

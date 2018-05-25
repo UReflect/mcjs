@@ -1,0 +1,9 @@
+.gitignore
+.npmignore
+.idea/
+node_modules/
+dist/
+examples/
+index.html
+package-lock.json
+yarn.lock
