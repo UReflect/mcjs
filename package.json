@@ -8,7 +8,7 @@
     "init": "mkdir dist lib",
     "clean": "rm -rf dist lib",
     "prebuild": "npm run clean && npm run init",
-    "build": "rollup -c && babel dist -d lib",
+    "build": "rollup -c && babel dist -d lib && uglifyjs lib/mc.js -o lib/mc.min.js",
     "start": "http-server"
   },
   "repository": {
@@ -26,6 +26,8 @@
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "http-server": "^0.11.1",
-    "rollup": "^0.59.2"
-  }
+    "rollup": "^0.59.2",
+    "uglify-js": "^3.3.27"
+  },
+  "dependencies": {}
 }
