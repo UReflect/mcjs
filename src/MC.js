@@ -1,5 +1,6 @@
 import MCWidget from "./MCWidget"
-import {onTouchEnd, onTouchMove} from "./movements";
+import { onTouchEnd, onTouchMove } from "./movements"
+import { onPinchStart, onPinchMove, onPinchEnd } from "./pinch"
 
 class MC {
     constructor(container='widgetContainer', selector='.widget', size=[19, 10], inertia=true, debug=false) {
@@ -11,6 +12,10 @@ class MC {
 
         this.w = this.container.offsetWidth
         this.h = this.container.offsetHeight
+
+        this.pinch = false
+        this.pinchOpt = {startdif: 0, prevdif: 0}
+        this.pinchFunc = null
 
         this.curWidget = null
         this.widgets = []
@@ -39,11 +44,27 @@ class MC {
     setGlobalHandlers() {
         var self = this
 
-        document.addEventListener('mousemove', (e) => { onTouchMove(e, self) })
-        document.addEventListener('touchmove', (e) => { onTouchMove(e, self) })
+        document.addEventListener('mousemove', (e) => { onTouchMove(e, self.curWidget) })
+        document.addEventListener('touchmove', (e) => {
+            e.touches.length === 1 ? onTouchMove(e, self.curWidget) : onPinchMove(e, self)
+        })
 
-        document.addEventListener("mouseup", (e) => { onTouchEnd(e, self) })
-        document.addEventListener("touchend", (e) => { onTouchEnd(e, self) })
+        document.addEventListener("mouseup", (e) => { onTouchEnd(e, self.curWidget) })
+        document.addEventListener("touchend", (e) => {
+            e.touches.length === 1 ? onTouchEnd(e, self.curWidget) : onPinchEnd(e, this.pinchFunc, self)
+        })
+    }
+
+    onPinch(func) {
+        var self = this
+
+        this.pinchFunc = func
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1)
+                onPinchStart(e, self)
+        })
+        return self;
     }
 
     showDebug() {
@@ -53,23 +74,23 @@ class MC {
         canvas.width = self.w
         canvas.height = self.h
 
-        self.container.appendChild(canvas);
+        self.container.appendChild(canvas)
 
-        var context = canvas.getContext("2d");
+        var context = canvas.getContext("2d")
 
         for (let x = 0; x <= self.w; x += (self.w / self.size[0])) {
-            context.moveTo(0.5 + x, 0);
-            context.lineTo(0.5 + x, self.h);
+            context.moveTo(0.5 + x, 0)
+            context.lineTo(0.5 + x, self.h)
         }
 
 
         for (let x = 0; x <= self.h; x += (self.h / self.size[1])) {
-            context.moveTo(0, 0.5 + x);
-            context.lineTo(self.w, 0.5 + x);
+            context.moveTo(0, 0.5 + x)
+            context.lineTo(self.w, 0.5 + x)
         }
 
-        context.strokeStyle = "black";
-        context.stroke();
+        context.strokeStyle = "black"
+        context.stroke()
     }
 }
 

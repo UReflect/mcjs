@@ -1,4 +1,5 @@
-import {onTouchStart} from "./movements";
+import { onTouchStart } from "./movements";
+import { snapDrag } from "./positionCalc";
 
 class MCWidget {
     constructor(element, container) {
@@ -30,10 +31,11 @@ class MCWidget {
 
         self.el.setAttribute('style',
                              'position:absolute;\
-                             left:' + this.x + 'px;\
-                             top:' + this.y + 'px;\
-                             width:' + this.w + 'px;\
-                             height:' + this.h + 'px;')
+                             left:' + self.x + 'px;\
+                             top:' + self.y + 'px;\
+                             width:' + self.w + 'px;\
+                             height:' + self.h + 'px;')
+        snapDrag(self)
     }
 
     setHandlers() {
@@ -41,6 +43,20 @@ class MCWidget {
 
         self.el.addEventListener("mousedown", (e) => { onTouchStart(e, self) })
         self.el.addEventListener("touchstart", (e) => { onTouchStart(e, self) })
+    }
+
+    setInfos() {
+        var self = this
+
+        let infos = {
+            posX: Math.round(self.x / (self.container.w / self.container.size[0])),
+            posY: Math.round(self.y / (self.container.h / self.container.size[1])),
+            sizeX: Math.round(self.w / (self.container.w / self.container.size[0])),
+            sizeY: Math.round(self.h / (self.container.h / self.container.size[1])),
+            resizable: self.resizable
+        }
+
+        self.el.setAttribute('data-widgetinfos', JSON.stringify(infos))
     }
 }
 

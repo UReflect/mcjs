@@ -1,4 +1,4 @@
-import {snapDrag, snapResize} from "./positionCalc";
+import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
     widget.container.curWidget = widget
@@ -7,9 +7,8 @@ export function onTouchStart(e, widget) {
     }, 1000)
 }
 
-export function onTouchMove(e, container) {
-    if (container.curWidget) {
-        let wgt = container.curWidget
+export function onTouchMove(e, wgt) {
+    if (wgt) {
         if (wgt.drag) {
             let pageX = e.touches ? e.touches[0].pageX : e.pageX
             let pageY = e.touches ? e.touches[0].pageY : e.pageY
@@ -48,23 +47,25 @@ export function onTouchMove(e, container) {
     }
 }
 
-export function onTouchEnd(e, container) {
-    if (container.curWidget) {
-        cancel(container.curWidget)
+export function onTouchEnd(e, wgt) {
+    if (wgt) {
+        cancel(wgt)
 
-        if (container.curWidget.drag)
-            snapDrag(container);
-        else if (container.curWidget.resize)
-            snapResize(container);
+        if (wgt.drag)
+            snapDrag(wgt)
+        else if (wgt.resize)
+            snapResize(wgt)
 
-        container.curWidget.el.style.zIndex = "0"
-        container.curWidget.el.style.boxSizing = ""
-        container.curWidget.el.style.border = ""
+        wgt.setInfos()
 
-        container.curWidget.drag = false
-        container.curWidget.resize = false
+        wgt.el.style.zIndex = "0"
+        wgt.el.style.boxSizing = ""
+        wgt.el.style.border = ""
 
-        container.curWidget = null
+        wgt.drag = false
+        wgt.resize = false
+
+        wgt = null
     }
 }
 
