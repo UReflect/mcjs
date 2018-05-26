@@ -1,10 +1,12 @@
 import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
+
     widget.container.curWidget = widget
+
     widget.presstimer = setTimeout(() => {
         move(e, widget)
-    }, 1000)
+    }, widget.clicktimer)
 }
 
 export function onTouchMove(e, wgt) {
@@ -21,6 +23,19 @@ export function onTouchMove(e, wgt) {
 
             wgt.el.style.left = wgt.x + 'px'
             wgt.el.style.top = wgt.y + 'px'
+
+            if (wgt.container.trash) {
+                if (pageX > wgt.container.w - 100 && pageX < wgt.container.w - 50 &&
+                    pageY > wgt.container.h - 100 && pageY < wgt.container.h - 50) {
+                    wgt.container.trashEl.classList.add('hover')
+                    wgt.container.trashEl.style.opacity = '0.5'
+                }
+                else {
+                    wgt.container.trashEl.classList.remove('hover')
+                    wgt.container.trashEl.style.opacity = '1'
+                }
+            }
+
         } else if (wgt.resize) {
 
             if (wgt.resizeOpt.right)
@@ -47,25 +62,45 @@ export function onTouchMove(e, wgt) {
     }
 }
 
-export function onTouchEnd(e, wgt) {
+export function onTouchEnd(e, wgt, callback=null) {
     if (wgt) {
         cancel(wgt)
 
-        if (wgt.drag)
-            snapDrag(wgt)
-        else if (wgt.resize)
-            snapResize(wgt)
+        if (!wgt.light) {
 
-        wgt.setInfos()
+            if (wgt.container.trash) {
 
-        wgt.el.style.zIndex = "0"
-        wgt.el.style.boxSizing = ""
-        wgt.el.style.border = ""
+                wgt.container.trashEl.style.opacity = '1'
+                wgt.container.trashEl.style.display = 'none'
 
-        wgt.drag = false
-        wgt.resize = false
+                if (wgt.container.trashEl.classList.contains('hover')) {
+                    wgt.el.parentNode.removeChild(wgt.el)
+                    wgt.container.setWidgets()
+                    return
+                }
+            }
 
-        wgt = null
+            if (wgt.drag)
+                snapDrag(wgt)
+            else if (wgt.resize)
+                snapResize(wgt)
+
+            wgt.setInfos()
+
+            wgt.el.style.zIndex = "0"
+            wgt.el.style.boxSizing = ""
+            wgt.el.style.border = ""
+
+            wgt.drag = false
+            wgt.resize = false
+
+            wgt = null
+
+        } else
+            wgt.drag = false
+
+        if (callback)
+            callback(e, wgt)
     }
 }
 
@@ -77,7 +112,6 @@ export function cancel(widget) {
 }
 
 function move(e, widget) {
-    widget.el.style.zIndex = "999"
 
     let pageX = e.touches ? e.touches[0].pageX : e.pageX
     let pageY = e.touches ? e.touches[0].pageY : e.pageY
@@ -85,26 +119,50 @@ function move(e, widget) {
     widget.prevx = pageX
     widget.prevy = pageY
 
-    if (widget.resizable) {
+    widget.el.style.zIndex = "99"
 
-        widget.el.style.boxSizing = "border-box"
-        widget.el.style.border = "10px solid black"
+    if (!widget.light) {
 
-        widget.resizeOpt.right = pageX >= (widget.x + widget.w - 10) && pageX <= (widget.x + widget.w)
-        widget.resizeOpt.left = pageX >= (widget.x) && pageX <= (widget.x + 10)
-        widget.resizeOpt.top = pageY >= (widget.y) && pageY <= (widget.y + 10)
-        widget.resizeOpt.bot = pageY >= (widget.y + widget.h - 10) && pageY <= (widget.y + widget.h)
-    }
+        if (widget.container.trash)
+            widget.container.trashEl.style.display = ''
 
-    if (widget.resizeOpt.right || widget.resizeOpt.left|| widget.resizeOpt.top || widget.resizeOpt.bot) {
-        widget.resizeOpt.x = e.clientX
-        widget.resizeOpt.y = e.clientY
-        widget.resizeOpt.w = widget.w
-        widget.resizeOpt.h = widget.h
-        widget.resizeOpt.sx = widget.x
-        widget.resizeOpt.sy = widget.y
-        widget.resize = true
-    }
-    else
+        if (widget.resizable) {
+
+            widget.el.style.boxSizing = "border-box"
+            widget.el.style.border = "10px solid white"
+
+            widget.resizeOpt.right = pageX >= (widget.x + widget.w - 10) && pageX <= (widget.x + widget.w)
+            widget.resizeOpt.left = pageX >= (widget.x) && pageX <= (widget.x + 10)
+            widget.resizeOpt.top = pageY >= (widget.y) && pageY <= (widget.y + 10)
+            widget.resizeOpt.bot = pageY >= (widget.y + widget.h - 10) && pageY <= (widget.y + widget.h)
+        }
+
+        if (widget.resizeOpt.right || widget.resizeOpt.left || widget.resizeOpt.top || widget.resizeOpt.bot) {
+            widget.resizeOpt.x = e.clientX
+            widget.resizeOpt.y = e.clientY
+            widget.resizeOpt.w = widget.w
+            widget.resizeOpt.h = widget.h
+            widget.resizeOpt.sx = widget.x
+            widget.resizeOpt.sy = widget.y
+            widget.resize = true
+        }
+        else
+            widget.drag = true
+    } else {
+        //TODO: C'est de la merde temporaire faut trouver une meilleure idée
+        //TODO: Simple clic avec le touch delete le truc c'est de la merde
+
         widget.drag = true
+
+        let parent2 = widget.el.parentElement.parentElement.parentElement
+        let parent = widget.el.parentElement
+        let clone = widget.el.cloneNode(true)
+
+        widget.el.style.position = 'absolute'
+        widget.el.style.left = widget.x + 'px'
+        widget.el.style.top = widget.y + 'px'
+
+        parent2.appendChild(widget.el)
+        parent.appendChild(clone)
+    }
 }

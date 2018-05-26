@@ -1,11 +1,20 @@
-#widgetContainer {
-    background-color: blue;
+#page-component {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    overflow: auto;
+    overflow: hidden;
+}
+
+#widgetContainer {
+    transition: all 1s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
 }
 
 .widget {
@@ -13,3 +22,38 @@
     user-select: none;
     float: left;
 }
+
+#add-widgets {
+    position: absolute;
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 70%;
+}
+
+.widget-item {
+    user-select: none;
+    float: left;
+    background-color: #FFFFFF;
+    height: 100px;
+    width: 100px;
+    margin: 15px 15px 30px 15px;
+}
+
+.circled {
+    border: 1px solid #FFF;
+    border-radius: 50px;
+}
+
+.align-horizontal {
+    float: left;
+}
+
+.inivisible {
+    display: none;
+}
+
+body { background-color: black; color: white; }

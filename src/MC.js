@@ -3,12 +3,15 @@ import { onTouchEnd, onTouchMove } from "./movements"
 import { onPinchStart, onPinchMove, onPinchEnd } from "./pinch"
 
 class MC {
-    constructor(container='widgetContainer', selector='.widget', size=[19, 10], inertia=true, debug=false) {
+    constructor(container='widgetContainer', selector='.widget', size=[19, 10],
+                inertia=true, trash=false, debug=false) {
         this.container = document.getElementById(container)
         this.selector = selector
         this.size = size
         this.inertia = inertia
         this.debug = debug
+        this.trash = trash
+        this.trashEl = null
 
         this.w = this.container.offsetWidth
         this.h = this.container.offsetHeight
@@ -33,12 +36,24 @@ class MC {
 
         self.setGlobalHandlers()
 
-        document.querySelectorAll(self.selector).forEach((el) => {
-            self.widgets.push(new MCWidget(el, self))
-        })
+        self.setWidgets()
 
         if (self.debug)
             this.showDebug()
+
+        if (self.trash)
+            this.createTrash()
+    }
+
+    setWidgets() {
+        var self = this
+
+        self.widgets = []
+        document.querySelectorAll(self.selector).forEach((el) => {
+            var new_el = el.cloneNode(true);
+            el.parentNode.replaceChild(new_el, el);
+            self.widgets.push(new MCWidget(new_el, false, self))
+        })
     }
 
     setGlobalHandlers() {
@@ -51,8 +66,11 @@ class MC {
 
         document.addEventListener("mouseup", (e) => { onTouchEnd(e, self.curWidget) })
         document.addEventListener("touchend", (e) => {
-            e.touches.length === 1 ? onTouchEnd(e, self.curWidget) : onPinchEnd(e, this.pinchFunc, self)
+            onTouchEnd(e, self.curWidget)
+            onPinchEnd(e, this.pinchFunc, self)
         })
+
+        document.addEventListener('contextmenu', (e) => { e.preventDefault() });
     }
 
     onPinch(func) {
@@ -89,8 +107,29 @@ class MC {
             context.lineTo(self.w, 0.5 + x)
         }
 
-        context.strokeStyle = "black"
+        context.strokeStyle = "white"
         context.stroke()
+    }
+
+    createTrash() {
+        var self = this
+
+        let node = document.createElement("div")
+
+        node.id = 'trash'
+        node.style.display = 'none'
+        node.style.zIndex = '999'
+        node.style.position = 'absolute'
+        node.style.width = '50px'
+        node.style.height = '50px'
+        node.style.backgroundColor = 'white'
+        node.style.border = '1px solid #FFF'
+        node.style.borderRadius = '50px'
+        node.style.left = (this.w - 100) + 'px'
+        node.style.top = (this.h - 100) + 'px'
+
+        self.container.appendChild(node)
+        self.trashEl = node
     }
 }
 

@@ -1,6 +1,6 @@
 export default [
     {
-        input: 'src/MC.js',
+        input: 'src/index.js',
         output: {
             name: 'MC',
             file: 'dist/mc.js',
@@ -8,7 +8,7 @@ export default [
         }
     },
     {
-        input: 'src/MC.js',
+        input: 'src/index.js',
         output: {
             name: 'MC',
             file: 'dist/mc_test.js',
