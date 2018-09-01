@@ -1,6 +1,7 @@
 import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
+    e.preventDefault();
 
     widget.container.curWidget = widget
 
@@ -76,6 +77,9 @@ export function onTouchEnd(e, wgt, callback=null) {
                 if (wgt.container.trashEl.classList.contains('hover')) {
                     wgt.el.parentNode.removeChild(wgt.el)
                     wgt.container.setWidgets()
+
+                    wgt.container.trashEl.classList.remove('hover')
+
                     return
                 }
             }
