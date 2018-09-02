@@ -1,4 +1,4 @@
-var mcsolar = new MC.MC("widgetContainer", ".widget", [19, 10], false, true, true);
+var mcsolar = new MC.MC("widgetContainer", ".widget", [19, 10], false, true);
 
 var container = document.getElementById('widgetContainer');
 var elemWidgets = document.getElementById('add-widgets');

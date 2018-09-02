@@ -19,5 +19,7 @@ export function onPinchEnd(e, func, container) {
             func(container, 'out');
         else if (container.pinchOpt.prevdif < container.pinchOpt.startdif)
             func(container, 'in');
+
+        container.setWidgets();
     }
 }

@@ -17,12 +17,18 @@ export function onTouchStart(e, widget) {
 
 export function onTouchMove(e, wgt) {
     if (wgt) {
+
+        let scaleX = Math.round((wgt.container.container.getBoundingClientRect().width
+                                / wgt.container.container.offsetWidth) * 100) / 100;
+        let scaleY = Math.round((wgt.container.container.getBoundingClientRect().height
+                                / wgt.container.container.offsetHeight) * 100) / 100;
+
         if (wgt.drag) {
             let pageX = e.touches ? e.touches[0].pageX : e.pageX;
             let pageY = e.touches ? e.touches[0].pageY : e.pageY;
 
-            wgt.x = wgt.x + (pageX - wgt.prevx);
-            wgt.y = wgt.y + (pageY - wgt.prevy);
+            wgt.x = wgt.x + ((pageX - wgt.prevx) / scaleX);
+            wgt.y = wgt.y + ((pageY - wgt.prevy) / scaleY);
 
             wgt.prevx = pageX;
             wgt.prevy = pageY;
@@ -48,19 +54,19 @@ export function onTouchMove(e, wgt) {
             let clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
             if (wgt.resizeOpt.right)
-                wgt.w = (wgt.resizeOpt.w + clientX - wgt.resizeOpt.x);
+                wgt.w = wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX);
 
             if (wgt.resizeOpt.bot)
-                wgt.h = (wgt.resizeOpt.h + clientY - wgt.resizeOpt.y);
+                wgt.h = wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY);
 
             if (wgt.resizeOpt.left) {
-                wgt.x = (wgt.resizeOpt.sx + clientX - wgt.resizeOpt.x);
-                wgt.w = (wgt.resizeOpt.w - clientX + wgt.resizeOpt.x);
+                wgt.x = wgt.resizeOpt.sx + ((clientX - wgt.resizeOpt.x) / scaleX);
+                wgt.w = wgt.resizeOpt.w - clientX + wgt.resizeOpt.x;
             }
 
             if (wgt.resizeOpt.top) {
-                wgt.y = (wgt.resizeOpt.sy + clientY - wgt.resizeOpt.y);
-                wgt.h = (wgt.resizeOpt.h - clientY + wgt.resizeOpt.y);
+                wgt.y = wgt.resizeOpt.sy + ((clientY - wgt.resizeOpt.y) / scaleY);
+                wgt.h = wgt.resizeOpt.h - clientY + wgt.resizeOpt.y;
             }
 
             wgt.el.style.left = wgt.x + 'px';
@@ -122,8 +128,8 @@ export function cancel(widget) {
 
 function move(e, widget) {
 
-    let pageX = e.touches ? e.touches[0].pageX : e.pageX;
-    let pageY = e.touches ? e.touches[0].pageY : e.pageY;
+    let pageX = (e.touches ? e.touches[0].pageX : e.pageX);
+    let pageY = (e.touches ? e.touches[0].pageY : e.pageY);
 
     widget.prevx = pageX;
     widget.prevy = pageY;
@@ -136,14 +142,19 @@ function move(e, widget) {
             widget.container.trashEl.style.display = '';
 
         if (widget.resizable) {
-            widget.resizeOpt.right = pageX >= (widget.x + widget.w - 10) && pageX <= (widget.x + widget.w + 10);
-            widget.resizeOpt.left = pageX >= (widget.x - 10) && pageX <= (widget.x + 10);
-            widget.resizeOpt.top = pageY >= (widget.y - 10) && pageY <= (widget.y + 10);
-            widget.resizeOpt.bot = pageY >= (widget.y + widget.h - 10) && pageY <= (widget.y + widget.h + 10);
+
+            let curX = widget.el.getBoundingClientRect().left,
+                curY = widget.el.getBoundingClientRect().top,
+                curW = widget.el.getBoundingClientRect().width,
+                curH = widget.el.getBoundingClientRect().height;
+
+            widget.resizeOpt.right = pageX >= (curX + curW - 10) && pageX <= (curX + curW + 10);
+            widget.resizeOpt.left = pageX >= (curX - 10) && pageX <= (curX + 10);
+            widget.resizeOpt.top = pageY >= (curY - 10) && pageY <= (curY + 10);
+            widget.resizeOpt.bot = pageY >= (curY + curH - 10) && pageY <= (curY + curH + 10);
         }
 
         if (widget.resizeOpt.right || widget.resizeOpt.left || widget.resizeOpt.top || widget.resizeOpt.bot) {
-
             widget.resizeOpt.x = e.touches ? e.touches[0].clientX : e.clientX;
             widget.resizeOpt.y = e.touches ? e.touches[0].clientY : e.clientY;
             widget.resizeOpt.w = widget.w;

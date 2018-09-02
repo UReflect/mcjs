@@ -5,7 +5,7 @@ export function snapDrag(wgt) {
     wgt.container.widgets.forEach((widget) => {
         if (wgt.x !== widget.x || wgt.y !== widget.y)
             pos.push({ x: widget.x, y: widget.y, w: widget.w, h: widget.h })
-    })
+    });
 
     let tmpx = 0, tmpy = 0, min = wgt.container.w + wgt.container.h;
 

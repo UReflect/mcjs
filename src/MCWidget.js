@@ -36,10 +36,10 @@ class MCWidget {
     setupHeavy() {
         let widgetInfos = JSON.parse(this.el.getAttribute('data-widgetInfos'));
 
-        this.x = (this.container.w / this.container.size[0]) * widgetInfos.posX  + 0.5;
-        this.y = (this.container.h / this.container.size[1]) * widgetInfos.posY  + 0.5;
-        this.w = (this.container.w / this.container.size[0]) * widgetInfos.sizeX  - 1;
-        this.h = (this.container.h / this.container.size[1]) * widgetInfos.sizeY  - 1;
+        this.x = (this.container.w / this.container.size[0]) * widgetInfos.posX + 0.5;
+        this.y = (this.container.h / this.container.size[1]) * widgetInfos.posY + 0.5;
+        this.w = (this.container.w / this.container.size[0]) * widgetInfos.sizeX - 1;
+        this.h = (this.container.h / this.container.size[1]) * widgetInfos.sizeY - 1;
 
         this.resizable = widgetInfos.resizable;
         this.resizeOpt = {right: false, left: false, top: false, bot: false, x: 0, y: 0, w: 0, h: 0, sx: 0, sy: 0};
@@ -57,6 +57,7 @@ class MCWidget {
                              width:' + self.w + 'px;\
                              height:' + self.h + 'px;');
         snapDrag(self);
+
         self.setInfos();
     }
 
