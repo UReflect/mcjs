@@ -31,8 +31,6 @@ class MCWidget {
         this.y = this.el.getBoundingClientRect().top;
         this.w = this.el.offsetWidth;
         this.h = this.el.offsetHeight;
-
-        this.clicktimer = 10;
     }
 
     setupHeavy() {
@@ -45,8 +43,6 @@ class MCWidget {
 
         this.resizable = widgetInfos.resizable;
         this.resizeOpt = {right: false, left: false, top: false, bot: false, x: 0, y: 0, w: 0, h: 0, sx: 0, sy: 0};
-
-        this.clicktimer = 1000;
 
         this.place();
     }
@@ -67,6 +63,7 @@ class MCWidget {
     setHandlers() {
         var self = this;
 
+        self.el.addEventListener("click", (e) => { e.stopPropagation() });
         self.el.addEventListener("mousedown", (e) => { onTouchStart(e, self) });
         self.el.addEventListener("touchstart", (e) => { onTouchStart(e, self) });
     }

@@ -20,6 +20,9 @@ class MC {
         this.pinchOpt = {startdif: 0, prevdif: 0};
         this.pinchFunc = null;
 
+        this.isEditMode = false;
+        this.editTimer = 1000;
+
         this.curWidget = null;
         this.widgets = [];
         this.grid = [];
@@ -59,6 +62,11 @@ class MC {
     setGlobalHandlers() {
         var self = this;
 
+        document.addEventListener('click', () => {
+            self.isEditMode = false;
+            self.editModeOff();
+        });
+
         document.addEventListener('mousemove', (e) => { onTouchMove(e, self.curWidget) });
         document.addEventListener('touchmove', (e) => {
             e.touches.length === 1 ? onTouchMove(e, self.curWidget) : onPinchMove(e, self);
@@ -79,10 +87,56 @@ class MC {
         this.pinchFunc = func;
 
         document.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 1)
+            if (e.touches.length > 1) {
+                e.preventDefault();
                 onPinchStart(e, self);
-        });
+            }
+        }, {passive: false});
+
         return self;
+    }
+
+    createDot(top, bot, left, right) {
+        var dot = document.createElement('span');
+
+        dot.classList.add('resize-dot');
+        dot.style.position = 'absolute';
+        dot.style.top = top;
+        dot.style.bottom = bot;
+        dot.style.left = left;
+        dot.style.right = right;
+        dot.style.height = '10px';
+        dot.style.width = '10px';
+        dot.style.backgroundColor = '#007bff';
+        dot.style.borderRadius = '50%';
+        dot.style.zIndex = '999';
+
+        return dot;
+    }
+
+    editModeOn() {
+        var self = this;
+
+        self.widgets.forEach((wgt) => {
+            wgt.el.style.boxSizing = "border-box";
+            wgt.el.style.border = "1px solid #007bff";
+
+            wgt.el.appendChild(this.createDot('calc(50% - 5px)', '', '-5px', ''));
+            wgt.el.appendChild(this.createDot('calc(50% - 5px)', '', '', '-5px'));
+            wgt.el.appendChild(this.createDot('-5px', '', 'calc(50% - 5px)', ''));
+            wgt.el.appendChild(this.createDot('', '-5px', 'calc(50% - 5px)', ''));
+        });
+    }
+
+    editModeOff() {
+        var self = this;
+
+        self.widgets.forEach((wgt) => {
+            wgt.el.style.boxSizing = "";
+            wgt.el.style.border = "";
+
+            document.querySelectorAll('.resize-dot').forEach((el) => { el.remove() });
+        });
     }
 
     showDebug() {
