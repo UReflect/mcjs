@@ -15,10 +15,14 @@ export function onPinchEnd(e, func, container) {
 
         container.pinch = false;
 
-        if (container.pinchOpt.prevdif > container.pinchOpt.startdif)
+        if (container.pinchOpt.prevdif > container.pinchOpt.startdif) {
             func(container, 'out');
-        else if (container.pinchOpt.prevdif < container.pinchOpt.startdif)
+            container.pinched = false;
+        }
+        else if (container.pinchOpt.prevdif < container.pinchOpt.startdif) {
             func(container, 'in');
+            container.pinched = true;
+        }
 
         container.setWidgets();
     }

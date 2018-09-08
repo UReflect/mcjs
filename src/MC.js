@@ -10,13 +10,16 @@ class MC {
         this.size = size;
         this.inertia = inertia;
         this.debug = debug;
+
         this.trash = trash;
         this.trashEl = null;
+        this.trashFunc = null;
 
         this.w = this.container.offsetWidth;
         this.h = this.container.offsetHeight;
 
         this.pinch = false;
+        this.pinched = false;
         this.pinchOpt = {startdif: 0, prevdif: 0};
         this.pinchFunc = null;
 
@@ -51,6 +54,8 @@ class MC {
     setWidgets() {
         var self = this;
 
+        self.editModeOff();
+
         self.widgets = [];
         document.querySelectorAll(self.selector).forEach((el) => {
             var new_el = el.cloneNode(true);
@@ -62,10 +67,7 @@ class MC {
     setGlobalHandlers() {
         var self = this;
 
-        document.addEventListener('click', () => {
-            self.isEditMode = false;
-            self.editModeOff();
-        });
+        document.addEventListener('click', () => { self.editModeOff() });
 
         document.addEventListener('mousemove', (e) => { onTouchMove(e, self.curWidget) });
         document.addEventListener('touchmove', (e) => {
@@ -92,6 +94,18 @@ class MC {
                 onPinchStart(e, self);
             }
         }, {passive: false});
+
+        self.container.addEventListener('dblclick', (e) => {
+            if (self.pinched) {
+                func(self, 'out');
+                self.pinched = false;
+            }
+            else {
+                func(self, 'in');
+                self.pinched = true;
+            }
+            self.setWidgets();
+        });
 
         return self;
     }
@@ -131,6 +145,7 @@ class MC {
     editModeOff() {
         var self = this;
 
+        self.isEditMode = false;
         self.widgets.forEach((wgt) => {
             wgt.el.style.boxSizing = "";
             wgt.el.style.border = "";

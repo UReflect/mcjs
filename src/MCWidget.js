@@ -34,7 +34,7 @@ class MCWidget {
     }
 
     setupHeavy() {
-        let widgetInfos = JSON.parse(this.el.getAttribute('data-widgetInfos'));
+        let widgetInfos = JSON.parse(this.el.getAttribute('data-widget-infos'));
 
         this.x = (this.container.w / this.container.size[0]) * widgetInfos.posX + 0.5;
         this.y = (this.container.h / this.container.size[1]) * widgetInfos.posY + 0.5;
@@ -80,7 +80,7 @@ class MCWidget {
             resizable: self.resizable
         };
 
-        self.el.setAttribute('data-widgetinfos', JSON.stringify(infos));
+        self.el.setAttribute('data-widget-infos', JSON.stringify(infos));
     }
 }
 

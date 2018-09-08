@@ -18,7 +18,7 @@ function endDrag(e, widget) {
         pageY > conty && pageY < conty + conth) {
         // TODO: Add real module here
         var node = document.createElement("div");
-        var nodeStr = "<div class='widget' data-widgetInfos='{\"posX\": 2, \"posY\": 2, \"sizeX\": 3, \"sizeY\": 3, \"resizable\": true}'>"
+        var nodeStr = "<div class='widget' data-widget-infos='{\"posX\": 2, \"posY\": 2, \"sizeX\": 3, \"sizeY\": 3, \"resizable\": true}'>"
                         + "<span>Item 4</span></div>";
         node.innerHTML = nodeStr;
         container.appendChild(node.firstChild);
@@ -63,3 +63,7 @@ mcsolar.onPinch(function(e, type) {
     document.addEventListener("mouseup", (e) => { MC.onTouchEnd(e, curWidget.curWidget, endDrag) });
     document.addEventListener("touchend", (e) => { MC.onTouchEnd(e, curWidget.curWidget, endDrag) });
 });
+
+mcsolar.trashFunc = () => {
+  console.log('TRASH FUNC');
+};
