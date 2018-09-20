@@ -15,6 +15,13 @@ class MCWidget {
 
         this.presstimer = null;
 
+        // this.touch = false;
+
+        this.handled = false;
+
+        this.vmouseStart = this.mouseStart.bind(this);
+        this.vtouchStart = this.touchStart.bind(this);
+
         this.setHandlers();
 
         if (!this.light)
@@ -61,12 +68,27 @@ class MCWidget {
         self.setInfos();
     }
 
-    setHandlers() {
-        var self = this;
+    stopPropag(e) {
+        e.stopPropagation();
+    }
 
-        self.el.addEventListener("click", (e) => { e.stopPropagation() });
-        self.el.addEventListener("mousedown", (e) => { onTouchStart(e, self) });
-        self.el.addEventListener("touchstart", (e) => { onTouchStart(e, self) });
+    mouseStart(e) {
+        onTouchStart(e, this);
+    }
+
+    touchStart(e) {
+        onTouchStart(e, this);
+    }
+
+    setHandlers() {
+        // this.el.removeEventListener("mousedown", this.vmouseStart);
+        // this.el.removeEventListener("touchstart", this.vtouchStart);
+        console.log('héhé')
+        this.el.addEventListener("click", this.stopPropag);
+        this.el.addEventListener("mousedown", this.vmouseStart);
+        this.el.addEventListener("touchstart", this.vtouchStart);
+
+        this.handled = true;
     }
 
     setInfos() {

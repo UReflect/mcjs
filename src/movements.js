@@ -1,9 +1,17 @@
 import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
-    e.preventDefault();
+    console.log('touch start');
+
+    if (widget.container.isEditMode || widget.container.pinched)
+        e.preventDefault();
 
     widget.container.curWidget = widget;
+
+    if (!widget.light) {
+        widget.container.saveLCPos[0] = e.touches ? e.touches[0].pageX : e.pageX;
+        widget.container.saveLCPos[1] = e.touches ? e.touches[0].pageY : e.pageY;
+    }
 
     if (widget.container.isEditMode || widget.light) {
         move(e, widget);
@@ -21,6 +29,15 @@ export function onTouchMove(e, wgt) {
         let scaleX = 1;
         let scaleY = 1;
 
+        let pageX = e.touches ? e.touches[0].pageX : e.pageX;
+        let pageY = e.touches ? e.touches[0].pageY : e.pageY;
+
+        if (wgt.presstimer !== null &&
+            (pageX > wgt.container.saveLCPos[0] + 10 || pageX < wgt.container.saveLCPos[0] - 10 ||
+            pageY > wgt.container.saveLCPos[1] + 10 || pageY < wgt.container.saveLCPos[1] - 10)) {
+            cancel(wgt);
+        }
+
         if (!wgt.light) {
             scaleX = Math.round((wgt.container.container.getBoundingClientRect().width
                 / wgt.container.container.offsetWidth) * 100) / 100;
@@ -29,8 +46,6 @@ export function onTouchMove(e, wgt) {
         }
 
         if (wgt.drag) {
-            let pageX = e.touches ? e.touches[0].pageX : e.pageX;
-            let pageY = e.touches ? e.touches[0].pageY : e.pageY;
 
             wgt.x = wgt.x + ((pageX - wgt.prevx) / scaleX);
             wgt.y = wgt.y + ((pageY - wgt.prevy) / scaleY);
@@ -92,9 +107,6 @@ export function onTouchEnd(e, wgt, callback=null) {
 
             if (wgt.container.trash) {
 
-                wgt.container.trashEl.style.opacity = '1';
-                wgt.container.trashEl.style.display = 'none';
-
                 if (wgt.container.trashEl.classList.contains('hover')) {
                     wgt.el.parentNode.removeChild(wgt.el);
                     wgt.container.setWidgets();
@@ -138,8 +150,8 @@ export function cancel(widget) {
 
 function move(e, widget) {
 
-    let pageX = (e.touches ? e.touches[0].pageX : e.pageX);
-    let pageY = (e.touches ? e.touches[0].pageY : e.pageY);
+    let pageX = e.touches ? e.touches[0].pageX : e.pageX;
+    let pageY = e.touches ? e.touches[0].pageY : e.pageY;
 
     if (widget.x === 0 && widget.y === 0 &&
         widget.w === 0 && widget.h === 0) {
@@ -156,9 +168,6 @@ function move(e, widget) {
 
     if (!widget.light) {
 
-        if (widget.container.trash)
-            widget.container.trashEl.style.display = '';
-
         if (widget.resizable) {
 
             let curX = widget.el.getBoundingClientRect().left,
@@ -166,10 +175,10 @@ function move(e, widget) {
                 curW = widget.el.getBoundingClientRect().width,
                 curH = widget.el.getBoundingClientRect().height;
 
-            widget.resizeOpt.right = pageX >= (curX + curW - 10) && pageX <= (curX + curW + 10);
-            widget.resizeOpt.left = pageX >= (curX - 10) && pageX <= (curX + 10);
-            widget.resizeOpt.top = pageY >= (curY - 10) && pageY <= (curY + 10);
-            widget.resizeOpt.bot = pageY >= (curY + curH - 10) && pageY <= (curY + curH + 10);
+            widget.resizeOpt.right = pageX >= (curX + curW - 20) && pageX <= (curX + curW + 20);
+            widget.resizeOpt.left = pageX >= (curX - 20) && pageX <= (curX + 20);
+            widget.resizeOpt.top = pageY >= (curY - 20) && pageY <= (curY + 20);
+            widget.resizeOpt.bot = pageY >= (curY + curH - 20) && pageY <= (curY + curH + 20);
         }
 
         if (widget.resizeOpt.right || widget.resizeOpt.left || widget.resizeOpt.top || widget.resizeOpt.bot) {

@@ -23,7 +23,7 @@ function endDrag(e, widget) {
         node.innerHTML = nodeStr;
         container.appendChild(node.firstChild);
 
-        mcsolar.setWidgets()
+        mcsolar.setWidgets();
     }
 
     widget.el.parentNode.removeChild(widget.el);
@@ -38,7 +38,7 @@ function setWidgets() {
         var new_el = el.cloneNode(true);
         el.parentNode.replaceChild(new_el, el);
         list.push(new MC.MCWidget(new_el, true, curWidget));
-    })
+    });
 }
 
 mcsolar.onPinch(function(e, type) {
@@ -67,3 +67,8 @@ mcsolar.onPinch(function(e, type) {
 mcsolar.trashFunc = () => {
   console.log('TRASH FUNC');
 };
+
+var buttonTest = document.getElementById('button-test');
+buttonTest.addEventListener('click', (e) => {
+    console.log('Click on button !');
+});

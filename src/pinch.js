@@ -24,6 +24,6 @@ export function onPinchEnd(e, func, container) {
             container.pinched = true;
         }
 
-        container.setWidgets();
+        // container.setWidgets();
     }
 }

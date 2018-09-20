@@ -26,6 +26,8 @@ class MC {
         this.isEditMode = false;
         this.editTimer = 1000;
 
+        this.saveLCPos = [0, 0];
+
         this.curWidget = null;
         this.widgets = [];
         this.grid = [];
@@ -51,17 +53,25 @@ class MC {
             this.createTrash();
     }
 
+    checkAlreadyExist(new_el, el) {
+
+    }
+
     setWidgets() {
         var self = this;
 
         self.editModeOff();
-
-        self.widgets = [];
         document.querySelectorAll(self.selector).forEach((el) => {
-            var new_el = el.cloneNode(true);
-            el.parentNode.replaceChild(new_el, el);
-            self.widgets.push(new MCWidget(new_el, false, self));
-        })
+            let check = true;
+            for (let obj of self.widgets) {
+                if (obj.el === el) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check)
+                self.widgets.push(new MCWidget(el, false, self));
+        });
     }
 
     setGlobalHandlers() {
@@ -129,9 +139,7 @@ class MC {
     }
 
     editModeOn() {
-        var self = this;
-
-        self.widgets.forEach((wgt) => {
+        this.widgets.forEach((wgt) => {
             wgt.el.style.boxSizing = "border-box";
             wgt.el.style.border = "1px solid #007bff";
 
@@ -140,18 +148,24 @@ class MC {
             wgt.el.appendChild(this.createDot('-5px', '', 'calc(50% - 5px)', ''));
             wgt.el.appendChild(this.createDot('', '-5px', 'calc(50% - 5px)', ''));
         });
+
+        if (this.trash && this.trashEl !== null)
+            this.trashEl.style.display = '';
     }
 
     editModeOff() {
-        var self = this;
-
-        self.isEditMode = false;
-        self.widgets.forEach((wgt) => {
+        this.isEditMode = false;
+        this.widgets.forEach((wgt) => {
             wgt.el.style.boxSizing = "";
             wgt.el.style.border = "";
 
             document.querySelectorAll('.resize-dot').forEach((el) => { el.remove() });
         });
+
+        if (this.trashEl !== null) {
+            this.trashEl.style.opacity = '1';
+            this.trashEl.style.display = 'none';
+        }
     }
 
     showDebug() {
