@@ -1,6 +1,6 @@
 {
   "name": "@drartemi/mcjs",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "description": "Javascript interaction library",
   "main": "lib/mc.js",
   "scripts": {
