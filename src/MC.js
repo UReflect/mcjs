@@ -256,6 +256,9 @@ class MC {
         y++;
       }
 
+      if (!fcheck)
+        console.warn('No space to place this widget.');
+
       return fcheck;
     }
 }

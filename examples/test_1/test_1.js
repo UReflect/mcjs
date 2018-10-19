@@ -29,7 +29,6 @@ function endDrag(e, widget) {
                         + "<span>Item 4</span></div>";
         node.innerHTML = nodeStr;
 
-        console.log(mcsolar.gotEmptySpace(3, 3));
         if (mcsolar.gotEmptySpace(3, 3)) {
           container.appendChild(node.firstChild);
           mcsolar.setWidgets();
