@@ -14,16 +14,26 @@ function endDrag(e, widget) {
     var pageX = e.touches ? widget.prevx : e.pageX;
     var pageY = e.touches ? widget.prevy : e.pageY;
 
+    let scaledPageX = pageX - ((container.offsetWidth - container.getBoundingClientRect().width) / 2);
+    let scaledPageY = pageY - ((container.offsetHeight - container.getBoundingClientRect().height) / 2);
+
+    let newPosX = Math.min(18, Math.max(0, Math.round(scaledPageX / (contw / 19)) - 1));
+    let newPosY = Math.min(9, Math.max(0, Math.round(scaledPageY / (conth / 10)) - 1));
+
     if (pageX > contx && pageX < contx + contw &&
         pageY > conty && pageY < conty + conth) {
         // TODO: Add real module here
         var node = document.createElement("div");
-        var nodeStr = "<div class='widget' data-widget-infos='{\"posX\": 2, \"posY\": 2, \"sizeX\": 3, \"sizeY\": 3, \"resizable\": true}'>"
+        var nodeStr = "<div class='widget' data-module='module-" + Math.floor(Math.random() * 10000) +
+          "' data-widget-infos='{\"posX\": " + newPosX + ", \"posY\": " + newPosY + ", \"sizeX\": 3, \"sizeY\": 3, \"resizable\": true}'>"
                         + "<span>Item 4</span></div>";
         node.innerHTML = nodeStr;
-        container.appendChild(node.firstChild);
 
-        mcsolar.setWidgets();
+        console.log(mcsolar.gotEmptySpace(3, 3));
+        if (mcsolar.gotEmptySpace(3, 3)) {
+          container.appendChild(node.firstChild);
+          mcsolar.setWidgets();
+        }
     }
 
     widget.el.parentNode.removeChild(widget.el);
@@ -64,10 +74,11 @@ mcsolar.onPinch(function(e, type) {
     document.addEventListener("touchend", (e) => { MC.onTouchEnd(e, curWidget.curWidget, endDrag) });
 });
 
-mcsolar.trashFunc = () => {
-  console.log('delete');
-    // wgt.el.parentNode.removeChild(wgt.el);
-    // wgt.container.setWidgets();
+mcsolar.trashFunc = (wgt) => {
+    console.log('delete');
+
+    wgt.el.remove();
+    wgt.container.setWidgets();
 };
 
 var buttonTest = document.getElementById('button-test');

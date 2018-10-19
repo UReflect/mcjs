@@ -11,6 +11,8 @@ class MCWidget {
         this.minx = 0;
         this.miny = 0;
 
+        this.infos =
+
         this.drag = false;
         this.resize = false;
 
@@ -51,21 +53,32 @@ class MCWidget {
         this.minWidth = widgetInfos.minX ? (this.container.w / this.container.size[0]) * widgetInfos.minX : 1;
         this.minHeight = widgetInfos.minY ? (this.container.h / this.container.size[1]) * widgetInfos.minY : 1;
 
+        this.infos = {
+            posX: Math.round(this.x / (this.container.w / this.container.size[0])),
+            posY: Math.round(this.y / (this.container.h / this.container.size[1])),
+            sizeX: Math.round(this.w / (this.container.w / this.container.size[0])),
+            sizeY: Math.round(this.h / (this.container.h / this.container.size[1])),
+            resizable: this.resizable
+        };
+
         this.place();
+
+        for (let x = this.infos.posX; x < this.infos.posX + this.infos.sizeX; x++)
+          for (let y = this.infos.posY; y < this.infos.posY + this.infos.sizeY; y++) {
+            this.container.grid2[y][x] = 1;
+          }
     }
 
     place() {
-        var self = this;
-
-        self.el.setAttribute('style',
+        this.el.setAttribute('style',
                              'position:absolute;\
-                             left:' + self.x + 'px;\
-                             top:' + self.y + 'px;\
-                             width:' + self.w + 'px;\
-                             height:' + self.h + 'px;');
-        snapDrag(self);
+                             left:' + this.x + 'px;\
+                             top:' + this.y + 'px;\
+                             width:' + this.w + 'px;\
+                             height:' + this.h + 'px;');
+        snapDrag(this);
 
-        self.setInfos();
+        this.setInfos();
     }
 
     stopPropag(e) {
@@ -87,17 +100,15 @@ class MCWidget {
     }
 
     setInfos() {
-        var self = this;
-
-        let infos = {
-            posX: Math.round(self.x / (self.container.w / self.container.size[0])),
-            posY: Math.round(self.y / (self.container.h / self.container.size[1])),
-            sizeX: Math.round(self.w / (self.container.w / self.container.size[0])),
-            sizeY: Math.round(self.h / (self.container.h / self.container.size[1])),
-            resizable: self.resizable
+        this.infos = {
+            posX: Math.round(this.x / (this.container.w / this.container.size[0])),
+            posY: Math.round(this.y / (this.container.h / this.container.size[1])),
+            sizeX: Math.round(this.w / (this.container.w / this.container.size[0])),
+            sizeY: Math.round(this.h / (this.container.h / this.container.size[1])),
+            resizable: this.resizable
         };
 
-        self.el.setAttribute('data-widget-infos', JSON.stringify(infos));
+        this.el.setAttribute('data-widget-infos', JSON.stringify(this.infos));
     }
 }
 

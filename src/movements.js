@@ -56,7 +56,7 @@ export function onTouchMove(e, wgt) {
 
             if (wgt.container.trash) {
                 let scaledPageX = pageX - ((wgt.container.container.offsetWidth - wgt.container.container.getBoundingClientRect().width) / 2);
-                let scaledPageY = pageY -((wgt.container.container.offsetHeight - wgt.container.container.getBoundingClientRect().height) / 2);
+                let scaledPageY = pageY - ((wgt.container.container.offsetHeight - wgt.container.container.getBoundingClientRect().height) / 2);
 
                 if (scaledPageX > (wgt.container.w - 100) * scaleX && scaledPageX < (wgt.container.w - 50) * scaleX &&
                     scaledPageY > (wgt.container.h - 100) * scaleY && scaledPageY < (wgt.container.h - 50) * scaleY) {

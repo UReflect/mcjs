@@ -7,7 +7,7 @@ export function snapDrag(wgt) {
             pos.push({ x: widget.x, y: widget.y, w: widget.w, h: widget.h })
     });
 
-    let tmpx = 0, tmpy = 0, min = wgt.container.w + wgt.container.h;
+    let tmpx = -1, tmpy = -1, min = wgt.container.w + wgt.container.h;
 
     for (let x in wgt.container.grid) {
         let tmp = Math.abs(wgt.x - grid[x][0]) + Math.abs(wgt.y - grid[x][1]);
@@ -30,11 +30,16 @@ export function snapDrag(wgt) {
     let prevx = wgt.x;
     let prevy = wgt.y;
 
-    wgt.x = tmpx + 0.5;
-    wgt.y = tmpy + 0.5;
-    wgt.el.style.left = tmpx + 0.5 + 'px';
-    wgt.el.style.top = tmpy + 0.5 + 'px';
-
+    if (tmpx === -1 || tmpy === -1) {
+      console.warn('No space to place this widget.');
+      if (wgt.container.trashFunc !== null)
+        wgt.container.trashFunc(wgt);
+    } else {
+        wgt.x = tmpx + 0.5;
+        wgt.y = tmpy + 0.5;
+        wgt.el.style.left = tmpx + 0.5 + 'px';
+        wgt.el.style.top = tmpy + 0.5 + 'px';
+    }
     return {dw: tmpx - prevx, dh: tmpy - prevy}
 }
 

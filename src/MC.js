@@ -39,6 +39,8 @@ class MC {
             for (let x = 0; x < this.w; x += (this.w / this.size[0]))
                 this.grid.push([x + 0.5, y + 0.5]);
 
+        this.grid2 = this.resetGrid()
+
         this.init();
     }
 
@@ -56,10 +58,21 @@ class MC {
             this.createTrash();
     }
 
+    resetGrid() {
+      this.grid2 = [];
+      for (let y = 0; y < this.size[1]; y++) {
+        this.grid2.push([]);
+        for (let x = 0; x < this.size[0]; x++) {
+          this.grid2[y].push(0);
+        }
+      }
+    }
+
     setWidgets() {
         var self = this;
 
         self.editModeOff();
+        self.resetGrid();
 
         document.querySelectorAll(self.selector).forEach((el) => {
 
@@ -219,6 +232,31 @@ class MC {
 
         self.container.appendChild(node);
         self.trashEl = node;
+    }
+
+    gotEmptySpace(width, height) {
+      let y = 0;
+      let fcheck = false;
+
+      while (y < this.size[1] - height) {
+        let x = 0;
+        while (x < this.size[0] - width) {
+          let check = true;
+          for (let tmpx = x; tmpx < x + width; tmpx++)
+            for (let tmpy = y; tmpy < y + height; tmpy++)
+              if (this.grid2[tmpy][tmpx] === 1)
+                check = false;
+          if (check) {
+            x = this.size[0];
+            y = this.size[1];
+            fcheck = true;
+          }
+          x++;
+        }
+        y++;
+      }
+
+      return fcheck;
     }
 }
 
