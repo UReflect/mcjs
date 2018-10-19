@@ -1,4 +1,4 @@
-var mcsolar = new MC.MC("widgetContainer", ".widget", [19, 10], false, true);
+var mcsolar = new MC.MC("widgetContainer", ".widget", [19, 10], false, true, true);
 
 var container = document.getElementById('widgetContainer');
 var elemWidgets = document.getElementById('add-widgets');
@@ -65,7 +65,9 @@ mcsolar.onPinch(function(e, type) {
 });
 
 mcsolar.trashFunc = () => {
-  console.log('TRASH FUNC');
+  console.log('delete');
+    // wgt.el.parentNode.removeChild(wgt.el);
+    // wgt.container.setWidgets();
 };
 
 var buttonTest = document.getElementById('button-test');

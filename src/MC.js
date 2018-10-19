@@ -4,7 +4,7 @@ import { onPinchStart, onPinchMove, onPinchEnd } from "./pinch"
 
 class MC {
     constructor(container='widgetContainer', selector='.widget', size=[19, 10],
-                inertia=true, trash=false, debug=false) {
+                inertia=true, trash=false, debug=false, moveCallback=null, moveEndCallback=null) {
         this.container = document.getElementById(container);
         this.selector = selector;
         this.size = size;
@@ -14,6 +14,9 @@ class MC {
         this.trash = trash;
         this.trashEl = null;
         this.trashFunc = null;
+
+        this.moveCallback = moveCallback;
+        this.moveEndCallback = moveEndCallback;
 
         this.w = this.container.offsetWidth;
         this.h = this.container.offsetHeight;
@@ -53,40 +56,42 @@ class MC {
             this.createTrash();
     }
 
-    checkAlreadyExist(new_el, el) {
-
-    }
-
     setWidgets() {
         var self = this;
 
         self.editModeOff();
+
         document.querySelectorAll(self.selector).forEach((el) => {
-            let check = true;
+
+            let cnt = 0;
             for (let obj of self.widgets) {
-                if (obj.el === el) {
-                    check = false;
+
+                if (el.getAttribute('data-module') !== null && (
+                    obj.el.getAttribute('data-module') === el.getAttribute('data-module'))) {
+                    self.widgets.splice(cnt, 1);
                     break;
                 }
+                cnt++;
             }
-            if (check)
-                self.widgets.push(new MCWidget(el, false, self));
+            self.widgets.push(new MCWidget(el, false, self));
         });
     }
 
     setGlobalHandlers() {
         var self = this;
 
-        document.addEventListener('click', () => { self.editModeOff() });
+        self.container.addEventListener('click', () => {
+          self.editModeOff();
+        });
 
         document.addEventListener('mousemove', (e) => { onTouchMove(e, self.curWidget) });
         document.addEventListener('touchmove', (e) => {
             e.touches.length === 1 ? onTouchMove(e, self.curWidget) : onPinchMove(e, self);
         });
 
-        document.addEventListener("mouseup", (e) => { onTouchEnd(e, self.curWidget) });
+        document.addEventListener("mouseup", (e) => { onTouchEnd(e, self.curWidget, self.moveEndCallback) });
         document.addEventListener("touchend", (e) => {
-            onTouchEnd(e, self.curWidget);
+            onTouchEnd(e, self.curWidget, self.moveEndCallback);
             onPinchEnd(e, this.pinchFunc, self);
         });
 
@@ -139,6 +144,7 @@ class MC {
     }
 
     editModeOn() {
+        this.isEditMode = true;
         this.widgets.forEach((wgt) => {
             wgt.el.style.boxSizing = "border-box";
             wgt.el.style.border = "1px solid #007bff";

@@ -8,7 +8,7 @@ Yarn version:
   1.9.4
 
 Node version: 
-  8.11.4
+  10.12.0
 
 Platform: 
   linux x64
@@ -16,20 +16,20 @@ Platform:
 Trace: 
   Error: canceled
       at Interface.<anonymous> (/home/adrien/.yarn/lib/cli.js:126002:13)
-      at emitNone (events.js:106:13)
-      at Interface.emit (events.js:208:7)
-      at Interface._ttyWrite (readline.js:774:16)
-      at ReadStream.onkeypress (readline.js:158:10)
-      at emitTwo (events.js:126:13)
-      at ReadStream.emit (events.js:214:7)
-      at emitKeys (internal/readline.js:420:14)
+      at Interface.emit (events.js:182:13)
+      at Interface._ttyWrite (readline.js:783:16)
+      at ReadStream.onkeypress (readline.js:168:10)
+      at ReadStream.emit (events.js:182:13)
+      at emitKeys (internal/readline.js:424:14)
       at emitKeys.next (<anonymous>)
-      at ReadStream.onData (readline.js:1010:36)
+      at ReadStream.onData (readline.js:1022:36)
+      at ReadStream.emit (events.js:182:13)
+      at addChunk (_stream_readable.js:283:12)
 
 npm manifest: 
   {
     "name": "@drartemi/mcjs",
-    "version": "1.0.8",
+    "version": "1.0.23",
     "description": "Javascript interaction library",
     "main": "lib/mc.js",
     "scripts": {

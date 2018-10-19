@@ -1,7 +1,6 @@
 import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
-    console.log('touch start');
 
     if (widget.container.isEditMode || widget.container.pinched)
         e.preventDefault();
@@ -17,7 +16,6 @@ export function onTouchStart(e, widget) {
         move(e, widget);
     } else {
         widget.presstimer = setTimeout(() => {
-            widget.container.isEditMode = true;
             widget.container.editModeOn();
         }, widget.container.editTimer);
     }
@@ -76,27 +74,38 @@ export function onTouchMove(e, wgt) {
             let clientX = e.touches ? e.touches[0].clientX : e.clientX;
             let clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+            // if (wgt.resizeOpt.right && (wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX) > wgt.minWidth - 1
+            //     || wgt.resizeOpt.w < wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX)))
             if (wgt.resizeOpt.right)
                 wgt.w = wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX);
 
+            // if (wgt.resizeOpt.bot && (wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY) > wgt.minHeight - 1
+            //     || wgt.resizeOpt.h < wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY)))
             if (wgt.resizeOpt.bot)
                 wgt.h = wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY);
 
+            // if (wgt.resizeOpt.left && (wgt.resizeOpt.w - clientX + wgt.resizeOpt.x > wgt.minWidth - 1
+            //     || wgt.resizeOpt.w < wgt.resizeOpt.w - clientX + wgt.resizeOpt.x)) {
             if (wgt.resizeOpt.left) {
                 wgt.x = wgt.resizeOpt.sx + ((clientX - wgt.resizeOpt.x) / scaleX);
                 wgt.w = wgt.resizeOpt.w - clientX + wgt.resizeOpt.x;
             }
 
+            // if (wgt.resizeOpt.top && (wgt.resizeOpt.h - clientY + wgt.resizeOpt.y > wgt.minHeight - 1
+            //     || wgt.resizeOpt.h < wgt.resizeOpt.h - clientY + wgt.resizeOpt.y)) {
             if (wgt.resizeOpt.top) {
                 wgt.y = wgt.resizeOpt.sy + ((clientY - wgt.resizeOpt.y) / scaleY);
                 wgt.h = wgt.resizeOpt.h - clientY + wgt.resizeOpt.y;
-                }
+            }
 
             wgt.el.style.left = wgt.x + 'px';
             wgt.el.style.top = wgt.y + 'px';
             wgt.el.style.width = wgt.w + 'px';
             wgt.el.style.height = wgt.h + 'px';
         }
+
+        if (wgt.container.moveCallback)
+          wgt.container.moveCallback(wgt);
     }
 }
 
@@ -104,18 +113,18 @@ export function onTouchEnd(e, wgt, callback=null) {
     if (wgt) {
         cancel(wgt);
         if (!wgt.light) {
-
             if (wgt.container.trash) {
-
                 if (wgt.container.trashEl.classList.contains('hover')) {
-                    wgt.el.parentNode.removeChild(wgt.el);
-                    wgt.container.setWidgets();
+                  wgt.container.trashEl.classList.remove('hover');
 
-                    wgt.container.trashEl.classList.remove('hover');
+                  let wgt_idx = wgt.container.widgets.indexOf(wgt);
+                  wgt.container.widgets.splice(wgt_idx, 1);
 
-                    if (wgt.container.trashFunc !== null)
-                        wgt.container.trashFunc(wgt);
-                    return ;
+                  wgt.container.curWidget = null
+
+                  if (wgt.container.trashFunc !== null)
+                    wgt.container.trashFunc(wgt);
+                  return;
                 }
             }
 
@@ -131,12 +140,12 @@ export function onTouchEnd(e, wgt, callback=null) {
             wgt.drag = false;
             wgt.resize = false;
 
-            wgt = null
-
         } else
             wgt.drag = false;
 
-        if (callback)
+        wgt.container.curWidget = null
+
+        if (callback != null)
             callback(e, wgt);
     }
 }
@@ -182,16 +191,16 @@ function move(e, widget) {
         }
 
         if (widget.resizeOpt.right || widget.resizeOpt.left || widget.resizeOpt.top || widget.resizeOpt.bot) {
-            widget.resizeOpt.x = e.touches ? e.touches[0].clientX : e.clientX;
-            widget.resizeOpt.y = e.touches ? e.touches[0].clientY : e.clientY;
-            widget.resizeOpt.w = widget.w;
-            widget.resizeOpt.h = widget.h;
-            widget.resizeOpt.sx = widget.x;
-            widget.resizeOpt.sy = widget.y;
-            widget.resize = true;
+          widget.resizeOpt.x = e.touches ? e.touches[0].clientX : e.clientX;
+          widget.resizeOpt.y = e.touches ? e.touches[0].clientY : e.clientY;
+          widget.resizeOpt.w = widget.w;
+          widget.resizeOpt.h = widget.h;
+          widget.resizeOpt.sx = widget.x;
+          widget.resizeOpt.sy = widget.y;
+          widget.resize = true;
         }
         else
-            widget.drag = true;
+          widget.drag = true;
     } else {
 
         widget.drag = true;

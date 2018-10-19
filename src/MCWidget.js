@@ -3,9 +3,13 @@ import { snapDrag } from "./positionCalc";
 
 class MCWidget {
     constructor(element, light=true, container=null) {
+
         this.container = container;
         this.el = element;
         this.light = light;
+
+        this.minx = 0;
+        this.miny = 0;
 
         this.drag = false;
         this.resize = false;
@@ -14,10 +18,6 @@ class MCWidget {
         this.prevy = 0;
 
         this.presstimer = null;
-
-        // this.touch = false;
-
-        this.handled = false;
 
         this.vmouseStart = this.mouseStart.bind(this);
         this.vtouchStart = this.touchStart.bind(this);
@@ -28,8 +28,6 @@ class MCWidget {
             this.setupHeavy();
         else
             this.setupLight();
-
-
     }
 
     setupLight() {
@@ -50,6 +48,8 @@ class MCWidget {
 
         this.resizable = widgetInfos.resizable;
         this.resizeOpt = {right: false, left: false, top: false, bot: false, x: 0, y: 0, w: 0, h: 0, sx: 0, sy: 0};
+        this.minWidth = widgetInfos.minX ? (this.container.w / this.container.size[0]) * widgetInfos.minX : 1;
+        this.minHeight = widgetInfos.minY ? (this.container.h / this.container.size[1]) * widgetInfos.minY : 1;
 
         this.place();
     }
@@ -81,14 +81,9 @@ class MCWidget {
     }
 
     setHandlers() {
-        // this.el.removeEventListener("mousedown", this.vmouseStart);
-        // this.el.removeEventListener("touchstart", this.vtouchStart);
-        console.log('héhé')
         this.el.addEventListener("click", this.stopPropag);
         this.el.addEventListener("mousedown", this.vmouseStart);
         this.el.addEventListener("touchstart", this.vtouchStart);
-
-        this.handled = true;
     }
 
     setInfos() {
