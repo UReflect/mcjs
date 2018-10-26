@@ -55,8 +55,10 @@ export function onTouchMove(e, wgt) {
             wgt.el.style.top = wgt.y + 'px';
 
             if (wgt.container.trash) {
-                let scaledPageX = pageX - ((wgt.container.container.offsetWidth - wgt.container.container.getBoundingClientRect().width) / 2);
-                let scaledPageY = pageY - ((wgt.container.container.offsetHeight - wgt.container.container.getBoundingClientRect().height) / 2);
+                let scaledPageX = pageX - ((wgt.container.container.offsetWidth -
+                    wgt.container.container.getBoundingClientRect().width) / 2);
+                let scaledPageY = pageY - ((wgt.container.container.offsetHeight -
+                    wgt.container.container.getBoundingClientRect().height) / 2);
 
                 if (scaledPageX > (wgt.container.w - 100) * scaleX && scaledPageX < (wgt.container.w - 50) * scaleX &&
                     scaledPageY > (wgt.container.h - 100) * scaleY && scaledPageY < (wgt.container.h - 50) * scaleY) {
@@ -188,10 +190,10 @@ function move(e, widget) {
                 curW = widget.el.getBoundingClientRect().width,
                 curH = widget.el.getBoundingClientRect().height;
 
-            widget.resizeOpt.right = pageX >= (curX + curW - 20) && pageX <= (curX + curW + 20);
-            widget.resizeOpt.left = pageX >= (curX - 20) && pageX <= (curX + 20);
-            widget.resizeOpt.top = pageY >= (curY - 20) && pageY <= (curY + 20);
-            widget.resizeOpt.bot = pageY >= (curY + curH - 20) && pageY <= (curY + curH + 20);
+            widget.resizeOpt.right = pageX >= (curX + curW - 30) && pageX <= (curX + curW + 30);
+            widget.resizeOpt.left = pageX >= (curX - 30) && pageX <= (curX + 30);
+            widget.resizeOpt.top = pageY >= (curY - 30) && pageY <= (curY + 30);
+            widget.resizeOpt.bot = pageY >= (curY + curH - 30) && pageY <= (curY + curH + 30);
         }
 
         if (widget.resizeOpt.right || widget.resizeOpt.left || widget.resizeOpt.top || widget.resizeOpt.bot) {

@@ -162,10 +162,10 @@ class MC {
             wgt.el.style.boxSizing = "border-box";
             wgt.el.style.border = "1px solid #007bff";
 
-            wgt.el.appendChild(this.createDot('calc(50% - 5px)', '', '-5px', ''));
-            wgt.el.appendChild(this.createDot('calc(50% - 5px)', '', '', '-5px'));
-            wgt.el.appendChild(this.createDot('-5px', '', 'calc(50% - 5px)', ''));
-            wgt.el.appendChild(this.createDot('', '-5px', 'calc(50% - 5px)', ''));
+            wgt.el.appendChild(this.createDot('-5px', '', '-5px', ''));
+            wgt.el.appendChild(this.createDot('', '-5px', '', '-5px'));
+            wgt.el.appendChild(this.createDot('-5px', '', '', '-5px'));
+            wgt.el.appendChild(this.createDot('', '-5px', '-5px', ''));
         });
 
         if (this.trash && this.trashEl !== null)
