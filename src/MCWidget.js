@@ -50,8 +50,11 @@ class MCWidget {
 
         this.resizable = widgetInfos.resizable;
         this.resizeOpt = {right: false, left: false, top: false, bot: false, x: 0, y: 0, w: 0, h: 0, sx: 0, sy: 0};
-        this.minWidth = widgetInfos.minX ? (this.container.w / this.container.size[0]) * widgetInfos.minX : 1;
-        this.minHeight = widgetInfos.minY ? (this.container.h / this.container.size[1]) * widgetInfos.minY : 1;
+
+        this.minWidth = ((this.container.w / this.container.size[0]) *
+          (widgetInfos.minX ? widgetInfos.minX : 1)) - 0.5;
+        this.minHeight = ((this.container.h / this.container.size[1]) *
+          (widgetInfos.minY ? widgetInfos.minY : 1)) - 0.5;
 
         this.infos = {
             posX: Math.round(this.x / (this.container.w / this.container.size[0])),

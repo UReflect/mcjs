@@ -74,28 +74,32 @@ export function onTouchMove(e, wgt) {
             let clientX = e.touches ? e.touches[0].clientX : e.clientX;
             let clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-            // if (wgt.resizeOpt.right && (wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX) > wgt.minWidth - 1
-            //     || wgt.resizeOpt.w < wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX)))
-            if (wgt.resizeOpt.right)
-                wgt.w = wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX);
-
-            // if (wgt.resizeOpt.bot && (wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY) > wgt.minHeight - 1
-            //     || wgt.resizeOpt.h < wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY)))
-            if (wgt.resizeOpt.bot)
-                wgt.h = wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY);
-
-            // if (wgt.resizeOpt.left && (wgt.resizeOpt.w - clientX + wgt.resizeOpt.x > wgt.minWidth - 1
-            //     || wgt.resizeOpt.w < wgt.resizeOpt.w - clientX + wgt.resizeOpt.x)) {
-            if (wgt.resizeOpt.left) {
-                wgt.x = wgt.resizeOpt.sx + ((clientX - wgt.resizeOpt.x) / scaleX);
-                wgt.w = wgt.resizeOpt.w - clientX + wgt.resizeOpt.x;
+            if (wgt.resizeOpt.right) {
+                if (wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX) > wgt.minWidth)
+                    wgt.w = wgt.resizeOpt.w + ((clientX - wgt.resizeOpt.x) / scaleX);
+                else
+                    wgt.w = wgt.minWidth;
             }
 
-            // if (wgt.resizeOpt.top && (wgt.resizeOpt.h - clientY + wgt.resizeOpt.y > wgt.minHeight - 1
-            //     || wgt.resizeOpt.h < wgt.resizeOpt.h - clientY + wgt.resizeOpt.y)) {
+            if (wgt.resizeOpt.bot) {
+                if (wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY) > wgt.minHeight)
+                    wgt.h = wgt.resizeOpt.h + ((clientY - wgt.resizeOpt.y) / scaleY);
+                else
+                    wgt.h = wgt.minHeight;
+            }
+
+            if (wgt.resizeOpt.left) {
+                if (wgt.resizeOpt.w + ((wgt.resizeOpt.x - clientX) / scaleX) > wgt.minWidth) {
+                    wgt.x = wgt.resizeOpt.sx + ((clientX - wgt.resizeOpt.x) / scaleX);
+                    wgt.w = wgt.resizeOpt.w + ((wgt.resizeOpt.x - clientX) / scaleX);
+                }
+            }
+
             if (wgt.resizeOpt.top) {
-                wgt.y = wgt.resizeOpt.sy + ((clientY - wgt.resizeOpt.y) / scaleY);
-                wgt.h = wgt.resizeOpt.h - clientY + wgt.resizeOpt.y;
+                if (wgt.resizeOpt.h + ((wgt.resizeOpt.y - clientY) / scaleY) > wgt.minHeight) {
+                    wgt.y = wgt.resizeOpt.sy + ((clientY - wgt.resizeOpt.y) / scaleY);
+                    wgt.h = wgt.resizeOpt.h + ((wgt.resizeOpt.y - clientY) / scaleY);
+                }
             }
 
             wgt.el.style.left = wgt.x + 'px';
