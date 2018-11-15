@@ -19,6 +19,8 @@ class MCWidget {
         this.prevx = 0;
         this.prevy = 0;
 
+        this.initPos = {x: 0, y: 0, w: 0, h: 0}
+
         this.presstimer = null;
 
         this.vmouseStart = this.mouseStart.bind(this);
@@ -30,6 +32,20 @@ class MCWidget {
             this.setupHeavy();
         else
             this.setupLight();
+    }
+
+    setInitPos() {
+      this.initPos.x = this.x;
+      this.initPos.y = this.y;
+      this.initPos.w = this.w;
+      this.initPos.h = this.h;
+    }
+
+    resetPos() {
+      this.x = this.initPos.x
+      this.y = this.initPos.y
+      this.w = this.initPos.w
+      this.h = this.initPos.h
     }
 
     setupLight() {

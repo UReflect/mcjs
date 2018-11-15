@@ -3,7 +3,7 @@ import { snapDrag, snapResize } from "./positionCalc";
 export function onTouchStart(e, widget) {
 
     if (widget.container.isEditMode || widget.container.pinched)
-        e.preventDefault();
+      e.preventDefault();
 
     widget.container.curWidget = widget;
 
@@ -11,6 +11,8 @@ export function onTouchStart(e, widget) {
         widget.container.saveLCPos[0] = e.touches ? e.touches[0].pageX : e.pageX;
         widget.container.saveLCPos[1] = e.touches ? e.touches[0].pageY : e.pageY;
     }
+
+    widget.setInitPos()
 
     if (widget.container.isEditMode || widget.light) {
         move(e, widget);
@@ -32,9 +34,8 @@ export function onTouchMove(e, wgt) {
 
         if (wgt.presstimer !== null &&
             (pageX > wgt.container.saveLCPos[0] + 10 || pageX < wgt.container.saveLCPos[0] - 10 ||
-            pageY > wgt.container.saveLCPos[1] + 10 || pageY < wgt.container.saveLCPos[1] - 10)) {
+            pageY > wgt.container.saveLCPos[1] + 10 || pageY < wgt.container.saveLCPos[1] - 10))
             cancel(wgt);
-        }
 
         if (!wgt.light) {
             scaleX = Math.round((wgt.container.container.getBoundingClientRect().width
@@ -134,12 +135,16 @@ export function onTouchEnd(e, wgt, callback=null) {
                 }
             }
 
-            if (wgt.drag)
+            if (wgt.drag || wgt.resize) {
+              if (wgt.drag)
                 snapDrag(wgt);
-            else if (wgt.resize)
-                snapResize(wgt);
+              else if (wgt.resize)
+                snapResize(wgt, false);
 
-            wgt.setInfos();
+              wgt.setInfos()
+              wgt.container.setWidgets();
+              wgt.container.editModeOn();
+            }
 
             wgt.el.style.zIndex = "0";
 

@@ -1,4 +1,4 @@
-export function snapDrag(wgt) {
+export function snapDrag(wgt, checkSpace=true) {
     let pos = [];
     let grid = wgt.container.grid;
 
@@ -32,8 +32,9 @@ export function snapDrag(wgt) {
 
     if (tmpx === -1 || tmpy === -1) {
       console.warn('No space to place this widget.');
-      if (wgt.container.trashFunc !== null)
+      if (checkSpace && wgt.container.trashFunc !== null)
         wgt.container.trashFunc(wgt);
+      return {dw: null, dh: null}
     } else {
         wgt.x = tmpx + 0.5;
         wgt.y = tmpy + 0.5;
@@ -48,13 +49,17 @@ export function snapResize(wgt) {
     let res = {}, min = 0;
 
     if (wgt.resizeOpt.top) {
-        res = snapDrag(wgt);
+        res = snapDrag(wgt, false);
+      if (res.dh == null)
+        return wgt.resetPos()
         min = wgt.container.h / wgt.container.size[1];
 
         result.h = (wgt.h - res.dh) < min ? min - 1 : wgt.h - res.dh - 1
 
     } else if (wgt.resizeOpt.bot) {
-        snapDrag(wgt);
+        res = snapDrag(wgt, false);
+        if (res.dh == null)
+          return wgt.resetPos()
         min = wgt.container.h / wgt.container.size[1];
 
         if (wgt.h % min >= min / 2 && wgt.h >= min / 2)
@@ -68,14 +73,19 @@ export function snapResize(wgt) {
         result.h = wgt.h;
 
     if (wgt.resizeOpt.left) {
-        if (!wgt.resizeOpt.top)
-            res = snapDrag(wgt);
+        if (!wgt.resizeOpt.top) {
+            res = snapDrag(wgt, false);
+            if (res.dh == null)
+              return wgt.resetPos()
+        }
         min = wgt.container.w / wgt.container.size[0];
 
         result.w = (wgt.w - res.dw) < min ? min - 1 : wgt.w - res.dw - 1;
 
     } else if (wgt.resizeOpt.right) {
-        snapDrag(wgt);
+        res = snapDrag(wgt, false);
+        if (res.dh == null)
+            return wgt.resetPos()
         min = wgt.container.w / wgt.container.size[0];
 
         if (wgt.w % min >= min / 2 && wgt.w >= min / 2)
