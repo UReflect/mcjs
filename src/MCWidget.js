@@ -8,8 +8,8 @@ class MCWidget {
         this.el = element;
         this.light = light;
 
-        this.minx = 0;
-        this.miny = 0;
+        this.minWidth = 0;
+        this.minHeight = 0;
 
         this.infos =
 
@@ -67,16 +67,19 @@ class MCWidget {
         this.resizable = widgetInfos.resizable;
         this.resizeOpt = {right: false, left: false, top: false, bot: false, x: 0, y: 0, w: 0, h: 0, sx: 0, sy: 0};
 
-        this.minWidth = ((this.container.w / this.container.size[0]) *
-          (widgetInfos.minX ? widgetInfos.minX : 1)) - 0.5;
-        this.minHeight = ((this.container.h / this.container.size[1]) *
-          (widgetInfos.minY ? widgetInfos.minY : 1)) - 0.5;
+        let minX = widgetInfos.minX ? widgetInfos.minX : 1;
+        let minY = widgetInfos.minY ? widgetInfos.minY : 1;
+
+        this.minWidth = ((this.container.w / this.container.size[0]) * minX) - 0.5;
+        this.minHeight = ((this.container.h / this.container.size[1]) * minY) - 0.5;
 
         this.infos = {
             posX: Math.round(this.x / (this.container.w / this.container.size[0])),
             posY: Math.round(this.y / (this.container.h / this.container.size[1])),
             sizeX: Math.round(this.w / (this.container.w / this.container.size[0])),
             sizeY: Math.round(this.h / (this.container.h / this.container.size[1])),
+            minX: minX,
+            minY: minY,
             resizable: this.resizable
         };
 
@@ -124,6 +127,8 @@ class MCWidget {
             posY: Math.round(this.y / (this.container.h / this.container.size[1])),
             sizeX: Math.round(this.w / (this.container.w / this.container.size[0])),
             sizeY: Math.round(this.h / (this.container.h / this.container.size[1])),
+            minX: this.infos.minX,
+            minY: this.infos.minY,
             resizable: this.resizable
         };
 
