@@ -24,9 +24,10 @@ function endDrag(e, widget) {
         pageY > conty && pageY < conty + conth) {
         // TODO: Add real module here
         var node = document.createElement("div");
+        console.log('ocuocu');
         var nodeStr = "<div class='widget' data-module='module-" + Math.floor(Math.random() * 10000) +
           "' data-widget-infos='{\"posX\": " + newPosX + ", \"posY\": " + newPosY + ", \"sizeX\": 3, \"sizeY\": 3, \"resizable\": true}'>"
-                        + "<span>Item 4</span></div>";
+                        + "<span>Item 4</span><button id=\"button-test-2\">Toto123</button></div>";
         node.innerHTML = nodeStr;
 
         if (mcsolar.gotEmptySpace(3, 3)) {
@@ -84,3 +85,10 @@ var buttonTest = document.getElementById('button-test');
 buttonTest.addEventListener('click', (e) => {
     console.log('Click on button !');
 });
+
+var buttonTest2 = document.getElementById('button-test-2');
+if (buttonTest2 != null) {
+  buttonTest2.addEventListener('click', (e) => {
+    console.log('Click on button !');
+  });
+}

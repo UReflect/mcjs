@@ -75,18 +75,26 @@ class MC {
         self.resetGrid();
 
         document.querySelectorAll(self.selector).forEach((el) => {
-
             let cnt = 0;
+            // let new_el = el;
+
             for (let obj of self.widgets) {
 
                 if (el.getAttribute('data-module') !== null && (
                     obj.el.getAttribute('data-module') === el.getAttribute('data-module'))) {
+                    //TODO: C'est pas sur que ca soit ouf ca
+                    // new_el = el.cloneNode(true);
+                    el.removeEventListener('click', obj.stopPropag)
+                    el.removeEventListener("mousedown", obj.vmouseStart);
+                    el.removeEventListener("touchstart", obj.vtouchStart);
                     self.widgets.splice(cnt, 1);
                     break;
                 }
                 cnt++;
             }
-            self.widgets.push(new MCWidget(el, false, self));
+            let tmpWgt = new MCWidget(el, false, self);
+            tmpWgt.setInitPos();
+            self.widgets.push(tmpWgt);
         });
     }
 

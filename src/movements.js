@@ -1,7 +1,6 @@
 import { snapDrag, snapResize } from "./positionCalc";
 
 export function onTouchStart(e, widget) {
-
     if (widget.container.isEditMode || widget.container.pinched)
       e.preventDefault();
 
@@ -142,8 +141,6 @@ export function onTouchEnd(e, wgt, callback=null) {
                 snapResize(wgt, false);
 
               wgt.setInfos()
-              wgt.container.setWidgets();
-              wgt.container.editModeOn();
             }
 
             wgt.el.style.zIndex = "0";

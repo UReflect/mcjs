@@ -46,6 +46,11 @@ class MCWidget {
       this.y = this.initPos.y
       this.w = this.initPos.w
       this.h = this.initPos.h
+
+      this.el.style.left = this.x + 'px';
+      this.el.style.top = this.y + 'px';
+      this.el.style.width = this.w + 'px';
+      this.el.style.height = this.h + 'px';
     }
 
     setupLight() {
