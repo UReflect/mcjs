@@ -23,6 +23,13 @@
     float: left;
 }
 
+.trash {
+    background-image: url("./trash.png");
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 #add-widgets {
     position: absolute;
     margin-right: auto;

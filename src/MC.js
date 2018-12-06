@@ -76,14 +76,11 @@ class MC {
 
         document.querySelectorAll(self.selector).forEach((el) => {
             let cnt = 0;
-            // let new_el = el;
 
             for (let obj of self.widgets) {
 
                 if (el.getAttribute('data-module') !== null && (
                     obj.el.getAttribute('data-module') === el.getAttribute('data-module'))) {
-                    //TODO: C'est pas sur que ca soit ouf ca
-                    // new_el = el.cloneNode(true);
                     el.removeEventListener('click', obj.stopPropag)
                     el.removeEventListener("mousedown", obj.vmouseStart);
                     el.removeEventListener("touchstart", obj.vtouchStart);
@@ -240,6 +237,7 @@ class MC {
 
         self.container.appendChild(node);
         self.trashEl = node;
+        self.trashEl.classList.add('trash');
     }
 
     gotEmptySpace(width, height) {
